@@ -1,0 +1,180 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#08110e">
+  <title>Rota Real — Rastreador de percurso</title>
+  <style>
+    :root{color-scheme:dark;--bg:#08110e;--panel:#101c17;--panel2:#14231c;--line:#24372c;--text:#edf7f0;--muted:#93a79a;--green:#65e69a;--green2:#28bd70;--red:#ff6b72;--amber:#ffcb70;--shadow:0 20px 60px #0005}
+    *{box-sizing:border-box}html{min-height:100%;background:var(--bg)}body{margin:0;min-height:100vh;background:radial-gradient(ellipse at 50% -15%,#193b2a 0,transparent 43%),var(--bg);color:var(--text);font:15px/1.5 Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;-webkit-font-smoothing:antialiased}
+    button{font:inherit}.shell{max-width:1040px;margin:0 auto;padding:22px 22px 44px}.topbar{display:flex;align-items:center;justify-content:space-between;margin-bottom:32px}.brand{display:flex;align-items:center;gap:12px}.mark{width:42px;height:42px;border-radius:14px;display:grid;place-items:center;background:linear-gradient(145deg,#76f1a4,#25b86c);box-shadow:0 8px 26px #39d17b30;color:#062315}.brand-name{font-size:17px;font-weight:800;letter-spacing:.01em}.brand-sub{font-size:12px;color:var(--muted);margin-top:1px}.live-pill{display:flex;align-items:center;gap:8px;border:1px solid var(--line);background:#0d1913;padding:8px 12px;border-radius:99px;color:var(--muted);font-size:12px;font-weight:700;letter-spacing:.06em;text-transform:uppercase}.dot{width:8px;height:8px;border-radius:50%;background:#718278}.live-pill.active{color:var(--green);border-color:#32714a}.live-pill.active .dot{background:var(--green);box-shadow:0 0 0 4px #65e69a1c;animation:pulse 1.8s infinite}@keyframes pulse{50%{box-shadow:0 0 0 7px #65e69a09}}
+    .heading{margin:0 0 8px;font-size:clamp(27px,5vw,38px);line-height:1.12;letter-spacing:-.04em}.intro{color:var(--muted);margin:0 0 26px;max-width:610px}.layout{display:grid;grid-template-columns:minmax(0,1.5fr) minmax(270px,.85fr);gap:18px;align-items:start}.card{background:linear-gradient(155deg,#13221b,#0d1712);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow)}.main-card{padding:28px}.distance-label{display:flex;justify-content:space-between;align-items:center;color:var(--muted);font-weight:650;font-size:13px}.accuracy{font-size:12px;padding:5px 9px;border-radius:99px;border:1px solid var(--line);color:var(--muted)}.distance{font-size:clamp(68px,13vw,108px);line-height:1;letter-spacing:-.075em;font-variant-numeric:tabular-nums;font-weight:780;margin:22px 0 24px}.distance small{font-size:.36em;letter-spacing:-.02em;color:#b9c9bf;margin-left:8px;font-weight:650}.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.stat{min-width:0;background:#0a1510;border:1px solid #1c2e23;border-radius:15px;padding:14px}.stat-label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.08em;font-weight:700}.stat-value{font-size:21px;font-weight:750;margin-top:5px;font-variant-numeric:tabular-nums;white-space:nowrap}.stat-value span{font-size:12px;color:var(--muted);font-weight:600;margin-left:3px}.actions{display:flex;gap:12px;margin-top:22px}.btn{min-height:54px;padding:0 24px;border:0;border-radius:14px;font-weight:800;cursor:pointer;transition:transform .15s,filter .15s}.btn:active{transform:scale(.98)}.btn:disabled{opacity:.45;cursor:not-allowed}.btn-start{flex:1;background:linear-gradient(135deg,#76eda3,#36c77b);color:#062315;box-shadow:0 10px 28px #38cf7924}.btn-stop{flex:1;background:#301719;color:#ff9b9f;border:1px solid #5d2a2d}.btn-ghost{background:#14231b;border:1px solid var(--line);color:var(--text)}.helper{font-size:12px;color:var(--muted);margin:14px 2px 0;display:flex;gap:8px;align-items:flex-start}.helper svg{flex:none;margin-top:1px}.side{display:grid;gap:18px}.side-card{padding:21px}.section-title{display:flex;justify-content:space-between;align-items:center;margin:0 0 16px;font-size:15px;font-weight:750}.section-title small{font-size:11px;color:var(--muted);font-weight:600}.gps-box{display:flex;gap:12px;align-items:center;padding:13px;background:#0b1711;border:1px solid #1d3024;border-radius:15px}.gps-icon{width:38px;height:38px;border-radius:12px;display:grid;place-items:center;background:#173524;color:var(--green);flex:none}.gps-title{font-size:13px;font-weight:700}.gps-text{font-size:12px;color:var(--muted);margin-top:2px}.notice{margin-top:13px;border-left:2px solid var(--amber);padding-left:11px;color:#b2bfb5;font-size:11px;line-height:1.55}.history-empty{text-align:center;color:var(--muted);padding:18px 8px 10px;font-size:13px}.history-list{display:grid;gap:9px;max-height:340px;overflow:auto}.trip{display:flex;justify-content:space-between;gap:12px;align-items:center;background:#0b1711;border:1px solid #1d3024;border-radius:13px;padding:12px}.trip-date{font-size:12px;color:var(--muted)}.trip-meta{font-size:11px;color:#809287;margin-top:3px}.trip-km{font-weight:800;color:var(--green);white-space:nowrap}.history-footer{margin-top:13px;display:flex;justify-content:space-between;align-items:center;font-size:12px;color:var(--muted)}.text-btn{border:0;background:none;color:#a9c4b1;text-decoration:underline;text-underline-offset:3px;cursor:pointer;font-size:12px;padding:5px}.text-btn:hover{color:var(--red)}.toast{position:fixed;left:50%;bottom:22px;transform:translate(-50%,20px);background:#f2fff6;color:#092114;padding:12px 17px;border-radius:12px;font-weight:700;font-size:13px;box-shadow:0 12px 40px #0006;opacity:0;pointer-events:none;transition:.22s;z-index:5;max-width:calc(100vw - 32px);text-align:center}.toast.show{opacity:1;transform:translate(-50%,0)}.footer{margin-top:22px;color:#687b6e;font-size:11px;text-align:center}.hidden{display:none!important}
+    @media(max-width:760px){.shell{padding:16px 14px 30px}.topbar{margin-bottom:28px}.layout{grid-template-columns:1fr}.main-card{padding:22px 18px;border-radius:21px}.side{grid-template-columns:1fr}.distance{margin:23px 0}.stat{padding:12px 10px}.stat-value{font-size:18px}.actions{gap:9px}.btn{padding:0 15px}.footer{line-height:1.6}}
+    @media(max-width:370px){.stats{gap:6px}.stat{padding:10px 7px}.stat-label{font-size:10px}.stat-value{font-size:16px}.actions{flex-direction:column}}
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header class="topbar">
+      <div class="brand">
+        <div class="mark" aria-hidden="true"><svg width="25" height="25" viewBox="0 0 24 24" fill="none"><path d="M5 18.5 8.6 5h6.8L19 18.5M7 12h10" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/><circle cx="12" cy="12" r="2" fill="currentColor"/></svg></div>
+        <div><div class="brand-name">Rota Real</div><div class="brand-sub">Rastreador de percurso</div></div>
+      </div>
+      <div id="livePill" class="live-pill"><span class="dot"></span><span id="statusText">Pronto</span></div>
+    </header>
+
+    <h1 class="heading">Sua rota, em tempo real.</h1>
+    <p class="intro">Acompanhe a distância percorrida durante o trabalho. Inicie antes de sair e encerre ao terminar o trajeto.</p>
+
+    <div class="layout">
+      <section class="card main-card" aria-label="Percurso atual">
+        <div class="distance-label"><span>DISTÂNCIA PERCORRIDA</span><span id="accuracy" class="accuracy">GPS aguardando</span></div>
+        <div class="distance"><span id="distance">0,00</span><small>km</small></div>
+        <div class="stats">
+          <div class="stat"><div class="stat-label">Velocidade</div><div class="stat-value"><span id="speed">0</span><span>km/h</span></div></div>
+          <div class="stat"><div class="stat-label">Duração</div><div class="stat-value" id="elapsed">00:00:00</div></div>
+          <div class="stat"><div class="stat-label">Pontos GPS</div><div class="stat-value" id="points">0</div></div>
+        </div>
+        <div class="actions">
+          <button id="startBtn" class="btn btn-start" type="button">▶ &nbsp; Iniciar percurso</button>
+          <button id="stopBtn" class="btn btn-stop" type="button" disabled>■ &nbsp; Parar</button>
+        </div>
+        <p class="helper"><svg width="15" height="15" viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 3 4.5 6v5.5c0 4.4 3.2 7.6 7.5 9.5 4.3-1.9 7.5-5.1 7.5-9.5V6L12 3Z" stroke="#93a79a" stroke-width="1.7"/><path d="m9 12 2 2 4-4" stroke="#65e69a" stroke-width="1.7" stroke-linecap="round" stroke-linejoin="round"/></svg> Sua localização é processada neste aparelho. O histórico fica salvo somente neste navegador.</p>
+      </section>
+
+      <aside class="side">
+        <section class="card side-card">
+          <h2 class="section-title">Status do GPS <small>LOCALIZAÇÃO</small></h2>
+          <div class="gps-box">
+            <div class="gps-icon"><svg width="20" height="20" viewBox="0 0 24 24" fill="none"><path d="M12 21s7-6.1 7-12a7 7 0 1 0-14 0c0 5.9 7 12 7 12Z" stroke="currentColor" stroke-width="1.8"/><circle cx="12" cy="9" r="2.5" stroke="currentColor" stroke-width="1.8"/></svg></div>
+            <div><div id="gpsTitle" class="gps-title">Aguardando início</div><div id="gpsText" class="gps-text">Toque em Iniciar para ativar o GPS</div></div>
+          </div>
+          <div class="notice">Dica: mantenha o GPS ligado. Limitação: HTML no navegador pode pausar ao minimizar ou apagar a tela; não garante rastreamento em segundo plano. Para isso, o Rota Real precisa de um serviço Android nativo em primeiro plano.</div>
+        </section>
+        <section class="card side-card">
+          <h2 class="section-title">Últimos percursos <small id="tripCount">0 registros</small></h2>
+          <div id="historyEmpty" class="history-empty">Seus percursos concluídos aparecerão aqui.</div>
+          <div id="historyList" class="history-list"></div>
+          <div id="historyFooter" class="history-footer hidden"><span id="totalHistory">Total registrado: 0,00 km</span><button id="clearHistory" class="text-btn" type="button">Apagar histórico</button></div>
+        </section>
+      </aside>
+    </div>
+    <div class="footer">Rota Real · Para segurança, configure o percurso antes de começar a dirigir.</div>
+  </main>
+  <div id="toast" class="toast" role="status" aria-live="polite"></div>
+
+  <script>
+  (() => {
+    'use strict';
+    const STORE_KEY = 'rota-real-gps-history-v1';
+    const ACTIVE_KEY = 'rota-real-gps-active-v1';
+    const $ = id => document.getElementById(id);
+    const ui = {
+      distance: $('distance'), speed: $('speed'), elapsed: $('elapsed'), points: $('points'), accuracy: $('accuracy'),
+      start: $('startBtn'), stop: $('stopBtn'), status: $('statusText'), pill: $('livePill'), gpsTitle: $('gpsTitle'), gpsText: $('gpsText'),
+      historyList: $('historyList'), historyEmpty: $('historyEmpty'), tripCount: $('tripCount'), historyFooter: $('historyFooter'),
+      totalHistory: $('totalHistory'), toast: $('toast')
+    };
+    let watchId = null, timerId = null, toastTimer = null, notice = null;
+    let session = null;
+    let history = readHistory();
+
+    function readHistory(){ try { const x = JSON.parse(localStorage.getItem(STORE_KEY) || '[]'); return Array.isArray(x) ? x : []; } catch { return []; } }
+    function saveHistory(){ try { localStorage.setItem(STORE_KEY, JSON.stringify(history)); } catch {} }
+    function persistActive(){ try { if(session) localStorage.setItem(ACTIVE_KEY, JSON.stringify(session)); else localStorage.removeItem(ACTIVE_KEY); } catch {} }
+    function fmtKm(m){ return (m / 1000).toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2}); }
+    function fmtDuration(ms){ let s=Math.max(0,Math.floor(ms/1000)); const h=Math.floor(s/3600); s%=3600; const m=Math.floor(s/60); s%=60; return [h,m,s].map(n=>String(n).padStart(2,'0')).join(':'); }
+    function showToast(text){ ui.toast.textContent=text; ui.toast.classList.add('show'); clearTimeout(toastTimer); toastTimer=setTimeout(()=>ui.toast.classList.remove('show'),3300); }
+    function setStatus(active,text){ ui.status.textContent=text; ui.pill.classList.toggle('active',active); }
+    function haversine(a,b){ const rad=n=>n*Math.PI/180, R=6371000; const dLat=rad(b.lat-a.lat), dLon=rad(b.lon-a.lon); const x=Math.sin(dLat/2)**2+Math.cos(rad(a.lat))*Math.cos(rad(b.lat))*Math.sin(dLon/2)**2; return 2*R*Math.atan2(Math.sqrt(x),Math.sqrt(1-x)); }
+    function render(){
+      const meters=session?.meters || 0; ui.distance.textContent=fmtKm(meters);
+      ui.speed.textContent=String(Math.round(session?.speed || 0)); ui.points.textContent=String(session?.points || 0);
+      ui.elapsed.textContent=session?.startedAt ? fmtDuration(Date.now()-session.startedAt) : '00:00:00';
+      renderHistory();
+    }
+    function renderHistory(){
+      ui.historyList.replaceChildren(); const count=history.length; ui.tripCount.textContent=`${count} ${count===1?'registro':'registros'}`;
+      ui.historyEmpty.classList.toggle('hidden', count>0); ui.historyFooter.classList.toggle('hidden', count===0);
+      const total=history.reduce((sum,x)=>sum+(Number(x.meters)||0),0); ui.totalHistory.textContent=`Total registrado: ${fmtKm(total)} km`;
+      history.slice(0,8).forEach(t=>{
+        const row=document.createElement('div'); row.className='trip';
+        const left=document.createElement('div'); const date=document.createElement('div'); date.className='trip-date';
+        date.textContent=new Date(t.endedAt).toLocaleString('pt-BR',{day:'2-digit',month:'short',hour:'2-digit',minute:'2-digit'});
+        const meta=document.createElement('div'); meta.className='trip-meta'; meta.textContent=fmtDuration(t.durationMs||0)+(t.interrupted?' · interrompido':''); left.append(date,meta);
+        const km=document.createElement('div'); km.className='trip-km'; km.textContent=`${fmtKm(t.meters||0)} km`; row.append(left,km); ui.historyList.append(row);
+      });
+    }
+    function updateNotice(){
+      if(!('Notification' in window) || Notification.permission!=='granted') return;
+      const body=`${fmtKm(session?.meters||0)} km percorridos · ${fmtDuration(Date.now()-(session?.startedAt||Date.now()))}`;
+      try { if(notice) { notice.title='Rota Real · Percurso em andamento'; notice.body=body; } else notice=new Notification('Rota Real · Percurso em andamento',{body,tag:'rota-real-tracking',renotify:false}); } catch {}
+    }
+    function setTrackingUI(isOn, searching=false){
+      ui.start.disabled=isOn; ui.stop.disabled=!isOn; setStatus(isOn,searching?'Buscando GPS':isOn?'Em percurso':'Pronto');
+      ui.gpsTitle.textContent=searching?'Obtendo localização…':isOn?'Rastreamento ativo':'Aguardando início';
+      ui.gpsText.textContent=searching?'Aguarde o primeiro sinal do GPS':isOn?'Distância sendo atualizada':'Toque em Iniciar para ativar o GPS';
+    }
+    function locationError(err){
+      const messages={1:'Permissão de localização negada. Libere o acesso à localização nas configurações do navegador.',2:'Não foi possível obter sua posição. Verifique se o GPS está ligado.',3:'O GPS demorou para responder. Tente novamente em um local aberto.'};
+      const msg=messages[err.code]||'Não foi possível acessar o GPS.';
+      if(session && !session.startedAt){ clearTracking(); session=null; persistActive(); setTrackingUI(false); }
+      ui.gpsTitle.textContent='GPS indisponível'; ui.gpsText.textContent=msg; ui.accuracy.textContent='Sem sinal'; showToast(msg);
+    }
+    function startTracking(){
+      if(!('geolocation' in navigator)){ showToast('Este navegador não oferece acesso ao GPS.'); return; }
+      if(!window.isSecureContext && location.protocol!=='file:'){ showToast('Abra este app em uma conexão segura (HTTPS) para usar o GPS.'); return; }
+      if(session){ showToast('Já existe um percurso em andamento.'); return; }
+      ui.distance.textContent='0,00'; ui.speed.textContent='0'; ui.points.textContent='0'; ui.elapsed.textContent='00:00:00';
+      session={meters:0,points:0,last:null,startedAt:null,firstStarted:Date.now(),speed:0,lastNoticeAt:0,lastNoticeMeters:0};
+      persistActive(); setTrackingUI(true,true); ui.accuracy.textContent='Buscando GPS';
+      if('Notification' in window && Notification.permission==='default') Notification.requestPermission().catch(()=>{});
+      watchId=navigator.geolocation.watchPosition(onPosition,locationError,{enableHighAccuracy:true,maximumAge:1000,timeout:20000});
+      timerId=setInterval(()=>{ if(session?.startedAt){ ui.elapsed.textContent=fmtDuration(Date.now()-session.startedAt); if(Date.now()-session.lastNoticeAt>60000){updateNotice();session.lastNoticeAt=Date.now();} } },1000);
+      showToast('Buscando sinal do GPS…');
+    }
+    function onPosition(pos){
+      if(!session) return;
+      const c=pos.coords, accuracy=Number(c.accuracy)||999;
+      ui.accuracy.textContent=`Precisão ±${Math.round(accuracy)} m`;
+      ui.gpsTitle.textContent='Localização recebida'; ui.gpsText.textContent=accuracy<=25?'Sinal GPS bom':accuracy<=50?'Precisão moderada':'Precisão baixa — aguardando melhor sinal';
+      if(accuracy>60) return;
+      const current={lat:c.latitude,lon:c.longitude,at:pos.timestamp||Date.now(),accuracy};
+      if(!session.startedAt){ session.startedAt=Date.now(); session.firstStarted=session.startedAt; setTrackingUI(true,false); updateNotice(); }
+      if(session.last){
+        const delta=haversine(session.last,current); const elapsed=Math.max((current.at-session.last.at)/1000,1); const kmh=(delta/elapsed)*3.6;
+        // Ignora ruído de GPS, saltos grandes e velocidades incompatíveis com deslocamento rodoviário.
+        if(delta>=4 && delta<=1000 && kmh<=190){ session.meters+=delta; session.points++; session.speed=Number.isFinite(c.speed)&&c.speed>=0?c.speed*3.6:kmh;
+          if(session.meters-session.lastNoticeMeters>=1000){ updateNotice(); session.lastNoticeMeters=session.meters; session.lastNoticeAt=Date.now(); }
+        } else if(delta<4){ session.speed=Number.isFinite(c.speed)&&c.speed>=0?c.speed*3.6:0; }
+      }
+      session.last=current; persistActive(); ui.distance.textContent=fmtKm(session.meters); ui.speed.textContent=String(Math.round(session.speed||0)); ui.points.textContent=String(session.points); ui.elapsed.textContent=fmtDuration(Date.now()-session.startedAt);
+    }
+    function clearTracking(){ if(watchId!==null){navigator.geolocation.clearWatch(watchId);watchId=null;} if(timerId){clearInterval(timerId);timerId=null;} if(notice){try{notice.close();}catch{} notice=null;} }
+    function stopTracking(){
+      if(!session) return;
+      const finalKm=fmtKm(session.meters);
+      clearTracking(); const endedAt=Date.now();
+      if(session.startedAt){ history.unshift({meters:Math.round(session.meters),startedAt:session.startedAt,endedAt,durationMs:endedAt-session.startedAt,points:session.points}); history=history.slice(0,100); saveHistory(); }
+      session=null; persistActive(); setTrackingUI(false); ui.accuracy.textContent='GPS aguardando'; ui.gpsTitle.textContent='Percurso encerrado'; ui.gpsText.textContent='O total foi salvo no histórico deste aparelho'; renderHistory();
+      showToast(`Percurso encerrado: ${finalKm} km`);
+    }
+    function recoverActive(){
+      try{const old=JSON.parse(localStorage.getItem(ACTIVE_KEY)||'null'); if(old&&typeof old.meters==='number'){
+        const startedAt=old.startedAt||0, endedAt=Date.now(), age=startedAt?endedAt-startedAt:0;
+        if(startedAt&&age<18*60*60*1000){
+          history.unshift({meters:Math.round(old.meters),startedAt,endedAt,durationMs:age,points:old.points||0,interrupted:true}); history=history.slice(0,100); saveHistory();
+          ui.gpsTitle.textContent='Sessão interrompida'; ui.gpsText.textContent='O navegador foi fechado ou suspenso; o GPS não acompanhou esse período.'; renderHistory();
+        }
+        localStorage.removeItem(ACTIVE_KEY);
+      }}catch{localStorage.removeItem(ACTIVE_KEY);}
+    }
+    ui.start.addEventListener('click',startTracking); ui.stop.addEventListener('click',stopTracking);
+    $('clearHistory').addEventListener('click',()=>{if(!history.length)return;if(confirm('Apagar todos os percursos salvos neste navegador?')){history=[];saveHistory();renderHistory();showToast('Histórico apagado.');}});
+    render(); recoverActive();
+    window.addEventListener('pagehide',()=>{ if(session) persistActive(); });
+  })();
+  </script>
+</body>
+</html>
